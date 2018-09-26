@@ -47,6 +47,8 @@ def set_base(datasource,  task_list, acq, rec, sourceDir, img_ext ):
     pet_list = ['sid', 'ses', 'sid', 'ses']
     t1_list =  [ 'sid', 'ses', 'sid', 'ses']
     t1_str=sourceDir+os.sep+'sub-%s/*ses-%s/anat/sub-%s_ses-%s'
+    #infields_list = []
+
     if task_list != ['']: 
         pet_str = pet_str + '_task-%s'
         t1_str = t1_str + '_task-%s'
@@ -55,11 +57,12 @@ def set_base(datasource,  task_list, acq, rec, sourceDir, img_ext ):
     if acq != '' :
         pet_str = pet_str + '_acq-%s'
         pet_list += ['acq']  
-        infields_list += [ 'acq' ] 
+        #infields_list += [ 'acq' ] 
+
     if rec != '':
         pet_str = pet_str + '_rec-%s'
         pet_list += ['rec']
-        infields_list += ['rec']
+        #infields_list += ['rec']
     pet_str = pet_str + '*_pet.'+img_ext
     
     #Dictionary for basic structural inputs to DataGrabber
@@ -73,6 +76,7 @@ def set_base(datasource,  task_list, acq, rec, sourceDir, img_ext ):
         pet=[pet_list]
     )
 
+    #datasource.inputs.infields_list += infields_list 
     datasource.inputs.field_template.update(field_template)
     datasource.inputs.template_args.update(template_args)
 
@@ -90,11 +94,11 @@ def set_label(datasource, img, template, task_list, label_img, template_img, sou
     if template == None :
         label_img_template=sourceDir+os.sep+'*sub-%s/*ses-%s/anat/sub-%s_ses-%s'
 
-        template_args[label_img]=[['sid', 'ses'] ] 
+        template_args[label_img]=[['sid', 'ses', 'sid', 'ses'] ] 
         if task_list != [''] :
             label_img_template += '_task-%s'
             template_args[label_img][0] +=  task_list  
-        label_img_template +='_*'+img+'T1w.'+img_ext
+        label_img_template +='*_variant-'+img+'_dtissue.'+img_ext
         field_template[label_img] = label_img_template
 
     else :
